@@ -7,8 +7,6 @@ var WalletValidator = require('wallet-validator')
 
 require('dotenv-defaults').config()
 const express = require('express')
-// for proxy ip 
-app.set('trust proxy', 1)
 
 var cors  = require('cors')
 var bodyParser = require('body-parser')
@@ -16,6 +14,9 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 const app = express()
 app.use(jsonParser)
+
+// for proxy ip -- 09102023
+app.set('trust proxy', 1)
 
 var corsOptions = {
     origin: '*',
