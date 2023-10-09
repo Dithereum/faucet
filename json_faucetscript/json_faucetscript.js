@@ -7,6 +7,9 @@ var WalletValidator = require('wallet-validator')
 
 require('dotenv-defaults').config()
 const express = require('express')
+// for proxy ip 
+app.set('trust proxy', 1)
+
 var cors  = require('cors')
 var bodyParser = require('body-parser')
 
@@ -29,12 +32,28 @@ app.use(function(req, res, next) {
 const rateLimit = require('express-rate-limit')
 //const limiter_message = 'Your IP Restricted for '+process.env.IP_RESTRICTED_MINUTES.toString()+" mins.";
 
+// Define a custom keyGenerator function to extract the client IP // added on 09102023
+const customKeyGenerator = (req /*, res*/) => {
+  // Implement logic to extract the correct IP address  // Example: If 'X-Forwarded-For' is set by the proxy, use it; otherwise, use 'req.ip'
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (forwardedFor) {
+    const ips = forwardedFor.split(',');
+    // Use the first IP address in the list (client's IP)
+    return ips[0].trim();
+  } else {
+    // If 'X-Forwarded-For' is not set, use 'req.ip'
+    return req.ip;
+  }
+};
+
+ // changes added keyGenerator for proxy ip- 09102023
 const limiter = rateLimit({
 	windowMs: process.env.IP_RESTRICTED_MINUTES * 60 * 1000, // IP_RESTRICTED_MINUTES minutes 
 	max: process.env.MAX_REQUEST_PER_IP, // Limit each IP to MAX_REQUEST_PER_IP requests per `window` (here, per 120 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers  
-  message: {"IP_ERROR": 'Your IP Restricted for '+process.env.IP_RESTRICTED_MINUTES.toString()+" mins."},// Too many requests message
+	keyGenerator: customKeyGenerator,
+  	message: {"IP_ERROR": 'Your IP Restricted for '+process.env.IP_RESTRICTED_MINUTES.toString()+" mins."},// Too many requests message
 })
 
 var tokensAllowed = process.env.ALLOWED_TOKENS;
