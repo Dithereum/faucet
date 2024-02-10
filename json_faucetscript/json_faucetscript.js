@@ -80,10 +80,15 @@ app.post('/faucet', cors(corsOptions), [limiter, gchecker],  function (req, res,
     var myrawHeadersObject = {};
     for(var i=0; i<myrawHeaders.length; i++){    
       if(i%2 == 0){        
-        myrawHeadersObject[myrawHeaders[i]] = myrawHeaders[i+1];       
+        //myrawHeadersObject[myrawHeaders[i]] = myrawHeaders[i+1];
+	if(myrawHeaders[i] === 'User-Agent'){
+		myrawHeadersObject['user-agent'] = myrawHeaders[i+1];      
+	}else{
+		myrawHeadersObject[myrawHeaders[i]] = myrawHeaders[i+1];
+	} 
       }
     }
-    //console.log(">>>>>>> myrawHeadersObject >>>>>",myrawHeadersObject['user-agent');
+    //console.log(">>>>>>> myrawHeadersObject >>>>>",myrawHeadersObject['user-agent']);
     var chk = UserAgentChecker.chekuseragent(myrawHeadersObject['user-agent']);          
     if(! chk){
         res.json({"ERROR": "Sorry Bro! you are not valid requester!, can't give you coins/tokens"})                
