@@ -246,7 +246,9 @@
 							console.log("in else ...", JSON.parse(response)['userTxHash']);
 							//alertify.alert("SUCCESS", response);
 							if(JSON.parse(response)['userTxHash']){
-								alertify.alert("SUCCESS", "Your wallet funded.Txhash-"+JSON.parse(response)['userTxHash']);
+								var aLink = "<a href=https://testnet.dithereum.org/tx/"+JSON.parse(response)['userTxHash']+"> Click to see</a>";
+							alertify.alert("SUCCESS", "Your wallet funded.Txhash-"+aLink);
+						
 							}else{	
 								alertify.alert("SUCCESS", response['ERROR']);
 							}
