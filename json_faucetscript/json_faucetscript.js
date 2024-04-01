@@ -16,12 +16,7 @@ const app = express()
 app.use(jsonParser)
 
 // for proxy ip -- 09102023
-app.set('trust proxy', 1)
-
-var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200
-}  
+app.set('trust proxy', 1) 
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.FAUCET_UI_URL);
@@ -74,7 +69,7 @@ var gchecker =  async function(req, res, next){
     }
 }    
 
-app.post('/faucet', cors(corsOptions), [limiter, gchecker],  function (req, res, next){     
+app.post('/faucet', [limiter, gchecker],  function (req, res, next){     
     var userIP = req.ip.split(':').pop();        
     var myrawHeaders = req.rawHeaders;    
     var myrawHeadersObject = {};
