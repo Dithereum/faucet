@@ -267,6 +267,6 @@ async function sendPeggy(req, res, next, peggyamt, _mycontract, tokenname){
     }                   
 }
 
-app.listen(6060, function(){
-  console.log("faucet api ..listening port 6060 ...");
+app.listen(process.env.PORT_NUM, function(){
+  console.log("faucet api is listening on port: "+process.env.PORT_NUM);
 });
